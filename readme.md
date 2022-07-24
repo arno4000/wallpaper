@@ -5,7 +5,7 @@ A cross-platform (Linux, Windows, and macOS) Golang library for getting and sett
 ## Installation
 
 ```sh
-go get github.com/reujab/wallpaper
+go get github.com/arno4000/wallpaper
 ```
 
 ## Example

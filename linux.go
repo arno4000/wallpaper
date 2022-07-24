@@ -1,12 +1,15 @@
+//go:build linux
 // +build linux
 
 package wallpaper
 
 import (
+	"errors"
 	"os/exec"
 	"os/user"
 	"path/filepath"
 	"strconv"
+	"strings"
 )
 
 // Get returns the current wallpaper.
@@ -36,7 +39,16 @@ func Get() (string, error) {
 // SetFromFile sets wallpaper from a file path.
 func SetFromFile(file string) error {
 	if isGNOMECompliant() {
-		return exec.Command("gsettings", "set", "org.gnome.desktop.background", "picture-uri", strconv.Quote("file://"+file)).Run()
+		theme, err := getGnomeTheme()
+		if err != nil {
+			return err
+		}
+		if theme == "dark" {
+			return exec.Command("gsettings", "set", "org.gnome.desktop.background", "picture-uri-dark", strconv.Quote("file://"+file)).Run()
+		} else if theme == "light" {
+			return exec.Command("gsettings", "set", "org.gnome.desktop.background", "picture-uri", strconv.Quote("file://"+file)).Run()
+
+		}
 	}
 
 	switch Desktop {
@@ -93,4 +105,19 @@ func getCacheDir() (string, error) {
 		return "", err
 	}
 	return filepath.Join(usr.HomeDir, ".cache"), nil
+}
+
+//function to get if gnome is in light or dark mode, because in gnome 40 and higher you need to set the wallpaper separately
+func getGnomeTheme() (string, error) {
+	cmd := exec.Command("gsettings", "get", "org.gnome.desktop.interface", "color-scheme")
+	output, err := cmd.CombinedOutput()
+	outputStr := string(output)
+	if strings.Contains(outputStr, "dark") {
+		return "dark", err
+	} else if strings.Contains(outputStr, "light") {
+		return "light", err
+	} else {
+		err = errors.New("Could not get gnome theme")
+		return "", err
+	}
 }

@@ -1,10 +1,12 @@
-module github.com/reujab/wallpaper
+module github.com/arno4000/wallpaper
 
-go 1.16
+go 1.18
 
 require (
-	github.com/smartystreets/goconvey v1.6.4 // indirect
-	golang.org/x/sys v0.0.0-20190215142949-d0b11bdaac8a
-	gopkg.in/ini.v1 v1.62.0
+	github.com/reujab/wallpaper v0.0.0-20210630195606-5f9f655b3740
+	golang.org/x/sys v0.0.0-20220722155257-8c9f86f7a55f
+	gopkg.in/ini.v1 v1.66.6
 	gopkg.in/yaml.v2 v2.4.0
 )
+
+require github.com/stretchr/testify v1.8.0 // indirect
