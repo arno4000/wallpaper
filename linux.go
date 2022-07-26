@@ -31,6 +31,8 @@ func Get() (string, error) {
 		return getLXDE()
 	case "Deepin":
 		return parseDconf("dconf", "read", "/com/deepin/wrap/gnome/desktop/background/picture-uri")
+	case "i3":
+		return getI3()
 	default:
 		return "", ErrUnsupportedDE
 	}
@@ -64,6 +66,8 @@ func SetFromFile(file string) error {
 		return exec.Command("pcmanfm", "-w", file).Run()
 	case "Deepin":
 		return exec.Command("dconf", "write", "/com/deepin/wrap/gnome/desktop/background/picture-uri", strconv.Quote("file://"+file)).Run()
+	case "i3":
+		return setI3(file)
 	default:
 		err := exec.Command("swaybg", "-i", file).Start()
 		// if the command completed successfully, return
