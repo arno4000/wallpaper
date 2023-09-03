@@ -33,6 +33,8 @@ func Get() (string, error) {
 		return parseDconf("dconf", "read", "/com/deepin/wrap/gnome/desktop/background/picture-uri")
 	case "i3":
 		return getI3()
+	case "Hyprland":
+		return getHyprland()
 	default:
 		return "", ErrUnsupportedDE
 	}
@@ -68,6 +70,8 @@ func SetFromFile(file string) error {
 		return exec.Command("dconf", "write", "/com/deepin/wrap/gnome/desktop/background/picture-uri", strconv.Quote("file://"+file)).Run()
 	case "i3":
 		return setI3(file)
+	case "Hyprland":
+		return setHyprland(file)
 	default:
 		err := exec.Command("swaybg", "-i", file).Start()
 		// if the command completed successfully, return
@@ -111,7 +115,7 @@ func getCacheDir() (string, error) {
 	return filepath.Join(usr.HomeDir, ".cache"), nil
 }
 
-//function to get if gnome is in light or dark mode, because in gnome 40 and higher you need to set the wallpaper separately
+// function to get if gnome is in light or dark mode, because in gnome 40 and higher you need to set the wallpaper separately
 func getGnomeTheme() (string, error) {
 	cmd := exec.Command("gsettings", "get", "org.gnome.desktop.interface", "color-scheme")
 	output, err := cmd.CombinedOutput()
